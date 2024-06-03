@@ -13,9 +13,33 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBOutlet var tableView: UITableView!
     
-    var globalSettings: [String] = ["공지사항", "실험실", "버전 정보"]
-    var privateSettings: [String] = ["개인/보안", "알림", "채팅", "멀티프로필"]
-    var otherSettings: [String] = ["고객센터/도움말"]
+    enum SettingOptions: Int, CaseIterable {
+        case total
+        case personal
+        case others
+        
+        var mainOptions: String {
+            switch self {
+            case .total:
+                return "전체 설정"
+            case .personal:
+                return "개인 설정"
+            case .others:
+                return "기타"
+            }
+        }
+        
+        var subOptions: [String] {
+            switch self {
+            case .total:
+                return ["공지사항", "실험실", "버전 정보"]
+            case .personal:
+                return ["개인/보안", "알림", "채팅", "멀티프로필"]
+            case .others:
+                return ["고객센터/도움말"]
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,27 +51,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     //MARK: - UITableViewDatasource
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return SettingOptions.allCases.count
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0 {
-            return "전체 설정"
-        } else if section == 1 {
-            return "개인 설정"
-        } else {
-            return "기타"
-        }
+        return SettingOptions.allCases[section].mainOptions
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return globalSettings.count
-        } else if section == 1 {
-            return privateSettings.count
-        } else {
-            return otherSettings.count
-        }
+        return SettingOptions.allCases[section].subOptions.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -55,29 +67,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         cell.textLabel?.font = .systemFont(ofSize: 13)
         
-        if indexPath.section == 0 {
-            cell.textLabel?.text = globalSettings[indexPath.row]
-        }
-        
-        if indexPath.section == 1 {
-            cell.textLabel?.text = privateSettings[indexPath.row]
-        }
-        
-        if indexPath.section == 2 {
-            cell.textLabel?.text = otherSettings[indexPath.row]
-        }
+        cell.textLabel?.text = SettingOptions.allCases[indexPath.section].subOptions[indexPath.row]
         
         return cell
     }
-    
-    
-    
-    
-    
-    
-    
-    
-
-
 }
 
